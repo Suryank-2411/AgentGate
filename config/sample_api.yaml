@@ -1,0 +1,87 @@
+openapi: "3.0.3"
+info:
+  title: "Pet Store API"
+  description: "A sample REST API for testing the REST-to-MCP virtualization layer."
+  version: "1.0.0"
+
+paths:
+  /pets:
+    get:
+      operationId: list_pets
+      summary: "List all pets"
+      description: "Returns a list of all pets in the store."
+      parameters:
+        - name: species
+          in: query
+          description: "Filter by species"
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: "Maximum number of results"
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: "A list of pets"
+    post:
+      operationId: create_pet
+      summary: "Create a new pet"
+      description: "Add a new pet to the store."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PetInput"
+      responses:
+        "201":
+          description: "Pet created"
+
+  /pets/{pet_id}:
+    get:
+      operationId: get_pet
+      summary: "Get a pet by ID"
+      parameters:
+        - name: pet_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "A single pet"
+    delete:
+      operationId: delete_pet
+      summary: "Delete a pet"
+      description: "Remove a pet from the store."
+      parameters:
+        - name: pet_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: "Pet deleted"
+
+components:
+  schemas:
+    PetInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The pet's name"
+        species:
+          type: string
+          description: "The species of the pet"
+        age:
+          type: integer
+          description: "The pet's age in years"
+      required:
+        - name
+        - species

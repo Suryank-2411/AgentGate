@@ -1,0 +1,37 @@
+# AgentGateWay — Main Gateway Configuration
+gateway:
+  host: "127.0.0.1"
+  port: 8000
+  log_level: "INFO"
+
+auth:
+  enabled: false
+  jwt_algorithm: "HS256"
+  jwt_secret: "dev-secret-change-in-production"
+  jwt_issuer: "agentgateway"
+  jwt_audience: "agentgateway"
+  # For production RS256:
+  # jwt_algorithm: "RS256"
+  # jwt_jwks_url: "https://your-idp.example.com/.well-known/jwks.json"
+
+policy:
+  engine: "local"  # "local" or "opa"
+  opa_url: "http://localhost:8181"
+
+database:
+  path: "data/agentgateway.db"
+
+guardrails:
+  enabled: true
+  block_sql_injection: true
+  block_path_traversal: true
+  detect_pii: true
+  detect_prompt_injection: true
+
+telemetry:
+  audit_enabled: true
+  otel_enabled: false
+  otel_endpoint: "http://localhost:4317"
+
+mock_oauth:
+  enabled: true  # Mount mock OAuth endpoints at /oauth/

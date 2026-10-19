@@ -1,0 +1,58 @@
+# AgentGateWay — Full-stack Docker Compose demo
+#
+# Usage:
+#   docker compose up --build
+#
+# Services:
+#   gateway       — The MCP Gateway proxy (port 8000)
+#   opa           — Open Policy Agent sidecar (port 8181)
+#   mock-db       — Mock Database Query MCP server (port 9002)
+#   mock-rest-api — Mock Pet Store REST API (port 9003)
+#
+# Note: The file-manager mock runs as a stdio subprocess inside the gateway.
+
+services:
+  gateway:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./config:/app/config
+    environment:
+      - AGW_CONFIG_DIR=/app/config
+      - AGW_GATEWAY__LOG_LEVEL=INFO
+      - AGW_POLICY__ENGINE=local
+      - AGW_AUTH__ENABLED=false
+      - AGW_DATABASE__PATH=/app/data/agentgateway.db
+    depends_on:
+      opa:
+        condition: service_started
+      mock-db:
+        condition: service_started
+      mock-rest-api:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  opa:
+    image: openpolicyagent/opa:latest
+    command: run --server --addr :8181 /policies
+    ports:
+      - "8181:8181"
+    volumes:
+      - ./config/policies:/policies
+
+  mock-db:
+    build: .
+    command: python -m mock_servers.database_query --transport streamable-http --port 9002
+    ports:
+      - "9002:9002"
+
+  mock-rest-api:
+    build: .
+    command: python -m mock_servers.rest_api --port 9003
+    ports:
+      - "9003:9003"

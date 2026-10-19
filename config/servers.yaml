@@ -1,0 +1,21 @@
+# Downstream MCP Server Registry
+servers:
+  - name: file-manager
+    transport: stdio
+    command: python
+    args: ["-m", "mock_servers.file_manager"]
+    env: {}
+    obo:
+      enabled: false
+
+  - name: database-query
+    transport: streamable-http
+    url: "http://localhost:9002/mcp"
+    obo:
+      enabled: false
+
+  # Example REST virtualization:
+  # - name: internal-api
+  #   transport: rest
+  #   openapi_spec: "./config/sample_api.yaml"
+  #   base_url: "http://localhost:9003"

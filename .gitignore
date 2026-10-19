@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Runtime data
+data/
+*.db
+
+# Test / cache
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+
+# Kiro
+.kiro/
+
+# Environment
+.env
+.env.local

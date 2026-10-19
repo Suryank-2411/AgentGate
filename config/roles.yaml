@@ -1,0 +1,31 @@
+# RBAC Role Definitions
+# Each role defines which tools and servers the user can access.
+roles:
+  admin:
+    description: "Full access to all tools and servers"
+    allowed_tools: ["*"]
+    denied_tools: []
+    allowed_servers: ["*"]
+
+  developer:
+    description: "Access to dev tools, no destructive operations"
+    allowed_tools:
+      - "list_files"
+      - "read_file"
+      - "write_file"
+      - "execute_query"
+      - "list_tables"
+      - "describe_table"
+    denied_tools:
+      - "delete_file"
+    allowed_servers: ["*"]
+
+  analyst:
+    description: "Read-only database access"
+    allowed_tools:
+      - "execute_query"
+      - "list_tables"
+      - "describe_table"
+    denied_tools: []
+    allowed_servers:
+      - "database-query"
